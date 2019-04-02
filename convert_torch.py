@@ -74,6 +74,9 @@ def lua_recursive_model(module,seq):
         elif name == 'ReLU':
             n = nn.ReLU()
             add_submodule(seq,n)
+        elif name == 'LeakyReLU':
+            n = nn.LeakyReLU(m.negval, inplace=m.inplace)
+            add_submodule(seq, n)
         elif name == 'Sigmoid':
             n = nn.Sigmoid()
             add_submodule(seq,n)
@@ -174,6 +177,8 @@ def lua_recursive_source(module):
             s += ['nn.BatchNorm3d({},{},{},{}),#BatchNorm3d'.format(m.running_mean.size(0), m.eps, m.momentum, m.affine)]
         elif name == 'ReLU':
             s += ['nn.ReLU()']
+        elif name == 'LeakyReLU':
+            s += ['nn.LeakyReLU({},inplace={})'.format(m.negval, m.inplace)]
         elif name == 'Sigmoid':
             s += ['nn.Sigmoid()']
         elif name == 'SpatialMaxPooling':
